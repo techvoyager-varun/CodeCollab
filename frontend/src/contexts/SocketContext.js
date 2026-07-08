@@ -12,7 +12,6 @@ export function SocketProvider({ children }) {
     const token = localStorage.getItem('codecollab-token');
     const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5000';
     const newSocket = io(socketUrl, {
-      transports: ['websocket', 'polling'],
       autoConnect: true,
       reconnection: true,
       reconnectionAttempts: 10,

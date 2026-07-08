@@ -16,6 +16,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
   const pcsRef = useRef({}); 
   const audiosRef = useRef({}); 
   const screenVideoRef = useRef(null);
+  const peersRef = useRef([]);
 
   const iceConfig = {
     iceServers: [
@@ -92,6 +93,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     setInVoice(false);
     setIsMuted(false);
     setPeers([]);
+    peersRef.current = [];
     setScreenShareUser(null);
     setRemoteScreenStream(null);
     toast.success('Left voice room');
@@ -169,6 +171,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     if (pcsRef.current[targetSocketId]) return pcsRef.current[targetSocketId];
 
     const pc = new RTCPeerConnection(iceConfig);
+    pc.candidateQueue = []; // Queue to store ICE candidates received before remote SDP
     pcsRef.current[targetSocketId] = pc;
 
     
@@ -207,6 +210,9 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
           document.body.appendChild(audio);
         }
         audio.srcObject = remoteStream;
+        audio.play().catch(err => {
+          console.error('Failed to play remote audio:', err);
+        });
       } else if (track.kind === 'video') {
         
         setScreenShareUser(userObj?.username || 'Peer');
@@ -239,6 +245,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     
     socket.on('webrtc-voice-peers', (peersList) => {
       setPeers(peersList);
+      peersRef.current = peersList;
       peersList.forEach(peer => {
         const pc = createPeerConnection(peer.socketId, peer);
         createAndSendOffer(peer.socketId);
@@ -248,8 +255,9 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     
     socket.on('webrtc-peer-joined', (peer) => {
       setPeers(prev => {
-        if (prev.find(p => p.socketId === peer.socketId)) return prev;
-        return [...prev, peer];
+        const next = prev.find(p => p.socketId === peer.socketId) ? prev : [...prev, peer];
+        peersRef.current = next;
+        return next;
       });
       createPeerConnection(peer.socketId, peer);
     });
@@ -257,7 +265,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     
     socket.on('webrtc-signal', async ({ senderSocketId, signal }) => {
       
-      const senderUser = peers.find(p => p.socketId === senderSocketId);
+      const senderUser = peersRef.current.find(p => p.socketId === senderSocketId);
       
       if (signal.type === 'screen-share-start') {
         setScreenShareUser(signal.senderName);
@@ -288,8 +296,24 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
               signal: { sdp: answer }
             });
           }
+          
+          if (pc.candidateQueue && pc.candidateQueue.length > 0) {
+            for (const candidate of pc.candidateQueue) {
+              await pc.addIceCandidate(new RTCIceCandidate(candidate)).catch(err => {
+                console.error('Failed to add queued candidate:', err);
+              });
+            }
+            pc.candidateQueue = [];
+          }
         } else if (signal.candidate) {
-          await pc.addIceCandidate(new RTCIceCandidate(signal.candidate));
+          if (pc.remoteDescription && pc.remoteDescription.type) {
+            await pc.addIceCandidate(new RTCIceCandidate(signal.candidate)).catch(err => {
+              console.error('Failed to add candidate:', err);
+            });
+          } else {
+            if (!pc.candidateQueue) pc.candidateQueue = [];
+            pc.candidateQueue.push(signal.candidate);
+          }
         }
       } catch (err) {
         console.error('Error handling WebRTC signal:', err);
@@ -298,7 +322,11 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
 
     
     socket.on('webrtc-peer-left', ({ socketId }) => {
-      setPeers(prev => prev.filter(p => p.socketId !== socketId));
+      setPeers(prev => {
+        const next = prev.filter(p => p.socketId !== socketId);
+        peersRef.current = next;
+        return next;
+      });
       
       if (pcsRef.current[socketId]) {
         pcsRef.current[socketId].close();
@@ -316,7 +344,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
       socket.off('webrtc-signal');
       socket.off('webrtc-peer-left');
     };
-  }, [socket, peers]);
+  }, [socket]);
 
   
   useEffect(() => {

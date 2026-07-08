@@ -456,10 +456,19 @@ function setupSocketHandlers(io) {
     });
 
     socket.on('webrtc-signal', ({ targetSocketId, signal }) => {
-      io.to(targetSocketId).emit('webrtc-signal', {
-        senderSocketId: socket.id,
-        signal
-      });
+      if (targetSocketId === 'all') {
+        if (currentRoom) {
+          socket.to(currentRoom).emit('webrtc-signal', {
+            senderSocketId: socket.id,
+            signal
+          });
+        }
+      } else {
+        io.to(targetSocketId).emit('webrtc-signal', {
+          senderSocketId: socket.id,
+          signal
+        });
+      }
     });
 
     socket.on('webrtc-leave-voice', () => {
