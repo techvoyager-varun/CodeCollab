@@ -6,7 +6,7 @@ const { queryWithContext } = require('../services/rag');
 
 const router = express.Router();
 
-// POST /api/ai/ask — RAG-powered question
+
 router.post('/ask', verifyToken, aiLimiter, async (req, res) => {
   try {
     const { question, projectId } = req.body;
@@ -26,7 +26,7 @@ router.post('/ask', verifyToken, aiLimiter, async (req, res) => {
   }
 });
 
-// POST /api/ai/explain
+
 router.post('/explain', verifyToken, aiLimiter, async (req, res) => {
   try {
     const { code, language } = req.body;
@@ -42,7 +42,7 @@ router.post('/explain', verifyToken, aiLimiter, async (req, res) => {
   }
 });
 
-// POST /api/ai/debug
+
 router.post('/debug', verifyToken, aiLimiter, async (req, res) => {
   try {
     const { code, error, language } = req.body;
@@ -58,7 +58,7 @@ router.post('/debug', verifyToken, aiLimiter, async (req, res) => {
   }
 });
 
-// POST /api/ai/generate-tests
+
 router.post('/generate-tests', verifyToken, aiLimiter, async (req, res) => {
   try {
     const { code, language } = req.body;
@@ -73,7 +73,7 @@ router.post('/generate-tests', verifyToken, aiLimiter, async (req, res) => {
   }
 });
 
-// POST /api/ai/optimize
+
 router.post('/optimize', verifyToken, aiLimiter, async (req, res) => {
   try {
     const { code, language } = req.body;
@@ -88,7 +88,7 @@ router.post('/optimize', verifyToken, aiLimiter, async (req, res) => {
   }
 });
 
-// POST /api/ai/refactor
+
 router.post('/refactor', verifyToken, aiLimiter, async (req, res) => {
   try {
     const { code, language } = req.body;
@@ -103,7 +103,7 @@ router.post('/refactor', verifyToken, aiLimiter, async (req, res) => {
   }
 });
 
-// POST /api/ai/review
+
 router.post('/review', verifyToken, aiLimiter, async (req, res) => {
   try {
     const { code, language } = req.body;
@@ -118,7 +118,7 @@ router.post('/review', verifyToken, aiLimiter, async (req, res) => {
   }
 });
 
-// POST /api/ai/document
+
 router.post('/document', verifyToken, aiLimiter, async (req, res) => {
   try {
     const { code, language } = req.body;
@@ -133,7 +133,7 @@ router.post('/document', verifyToken, aiLimiter, async (req, res) => {
   }
 });
 
-// POST /api/ai/flowchart
+
 router.post('/flowchart', verifyToken, aiLimiter, async (req, res) => {
   try {
     const { code, language } = req.body;

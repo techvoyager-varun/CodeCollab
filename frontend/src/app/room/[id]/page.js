@@ -37,7 +37,7 @@ function RoomContent() {
   const [activeFileId, setActiveFileId] = useState(null);
   const [activeFile, setActiveFile] = useState(null);
   const [showWhiteboard, setShowWhiteboard] = useState(false);
-  const [rightPanel, setRightPanel] = useState('chat'); // chat | ai | history | review
+  const [rightPanel, setRightPanel] = useState('chat'); 
   const [reviewComments, setReviewComments] = useState([]);
   const [editorFocusLine, setEditorFocusLine] = useState(null);
   const [aiPrefilledPrompt, setAiPrefilledPrompt] = useState('');
@@ -62,7 +62,7 @@ function RoomContent() {
       const data = await api.get(`/api/auth/search?q=${q}`);
       setSearchResults(data.users);
     } catch (e) {
-      // ignore
+      
     }
   }, []);
 
@@ -78,7 +78,7 @@ function RoomContent() {
     }
   }, [room, toast]);
 
-  // Fetch room data
+  
   useEffect(() => {
     if (!authLoading && !user) { router.push('/login'); return; }
     if (!user) return;
@@ -97,7 +97,7 @@ function RoomContent() {
     loadRoom();
   }, [roomId, user, authLoading]);
 
-  // Socket join/leave
+  
   useEffect(() => {
     if (!socket || !connected || !user || !room) return;
 
@@ -112,7 +112,7 @@ function RoomContent() {
 
     socket.on('code-change', ({ fileId, changes }) => {
       if (fileId === activeFileId) {
-        // Update will be handled by EditorPanel
+        
       }
     });
 
@@ -173,7 +173,7 @@ function RoomContent() {
     };
   }, [socket, connected, user, room, roomId]);
 
-  // Open a file in editor
+  
   const openFile = useCallback(async (fileId) => {
     try {
       const data = await api.get(`/api/files/${fileId}/content`);
@@ -247,7 +247,7 @@ function RoomContent() {
     setTerminalOutput(prev => prev ? { ...prev, running: false } : null);
   }, [socket]);
 
-  // Review comments callbacks
+  
   const handleAddComment = useCallback(async (lineNumber, text) => {
     if (!activeFileId) return;
     try {
@@ -288,7 +288,7 @@ function RoomContent() {
     setShowRightPanel(true);
   }, []);
 
-  // Fetch comments on file change
+  
   useEffect(() => {
     if (!activeFileId) {
       setReviewComments([]);
@@ -305,7 +305,7 @@ function RoomContent() {
     fetchComments();
   }, [activeFileId]);
 
-  // Sync comments in real-time
+  
   useEffect(() => {
     if (!socket || !activeFileId) return;
 
@@ -335,7 +335,7 @@ function RoomContent() {
 
   return (
     <main className="flex-1 flex flex-col h-screen overflow-hidden">
-      {/* Top bar */}
+      {}
       <header className="h-10 border-b border-brand-border flex items-center justify-between px-3 shrink-0">
         <div className="flex items-center gap-3">
           <button onClick={() => router.push('/dashboard')} className="text-xs text-brand-text2 hover:text-brand-text1">← Back</button>
@@ -356,13 +356,13 @@ function RoomContent() {
         </div>
       </header>
 
-      {/* Invite Modal */}
+      {}
       {showInviteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowInviteModal(false)}>
           <div className="bg-brand-surface1 border border-brand-border p-6 w-full max-w-md animate-fade" style={{ backgroundColor: 'var(--surface-1)' }} onClick={e => e.stopPropagation()}>
             <h2 className="text-sm font-bold mb-4 font-sans">Invite Teammate</h2>
 
-            {/* Invite Link */}
+            {}
             <div className="mb-4">
               <label className="text-[10px] font-mono uppercase tracking-widest text-brand-text3 mb-1.5 block">Invite Link</label>
               <div className="flex gap-1">
@@ -386,7 +386,7 @@ function RoomContent() {
               <p className="text-[10px] text-brand-text3 mt-1">Share this link with teammates to invite them.</p>
             </div>
 
-            {/* Search users */}
+            {}
             <div className="flex flex-col gap-3">
               <label className="text-[10px] font-mono uppercase tracking-widest text-brand-text3">Or search by username</label>
               <input
@@ -436,7 +436,7 @@ function RoomContent() {
         </div>
       )}
 
-      {/* Toolbar */}
+      {}
       <Toolbar
         onRun={handleRunCode}
         onSave={() => activeFile && handleSave(activeFile.content)}
@@ -454,9 +454,9 @@ function RoomContent() {
         }}
       />
 
-      {/* Main workspace */}
+      {}
       <div className="flex-1 flex overflow-hidden">
-        {/* File tree */}
+        {}
         {showFileTree && (
           <div className="w-56 border-r border-brand-border flex flex-col shrink-0 overflow-hidden" style={{ backgroundColor: 'var(--surface-1)' }}>
             <FileTree
@@ -475,7 +475,7 @@ function RoomContent() {
           </div>
         )}
 
-        {/* Editor area */}
+        {}
         <div className="flex-1 flex flex-col overflow-hidden">
           <TabBar
             files={openFiles}
@@ -529,7 +529,7 @@ function RoomContent() {
           )}
         </div>
 
-        {/* Right panel */}
+        {}
         {showRightPanel && (
           <div className="w-72 border-l border-brand-border shrink-0" style={{ position: 'relative' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>

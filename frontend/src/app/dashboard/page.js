@@ -41,7 +41,7 @@ export default function DashboardPage() {
     e.preventDefault();
     try {
       const data = await api.post('/api/projects', { name: newName, description: newDesc, language: newLang });
-      // Create a default room for the project
+      
       await api.post('/api/rooms', { projectId: data.project.id, name: 'Main' });
       setProjects(prev => [data.project, ...prev]);
       setShowCreate(false);
@@ -88,7 +88,7 @@ export default function DashboardPage() {
 
   return (
     <main className="flex-1">
-      {/* Header */}
+      {}
       <header className="sticky top-0 z-50 border-b border-brand-border" style={{ backgroundColor: 'var(--base)' }}>
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 select-none hover:opacity-90 transition-opacity">
@@ -110,7 +110,7 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* Dashboard */}
+      {}
       <div className="max-w-6xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -126,7 +126,7 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {/* Create modal */}
+        {}
         {showCreate && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowCreate(false)}>
             <div className="border border-brand-border p-6 w-full max-w-md animate-fade" style={{ backgroundColor: 'var(--surface-1)' }} onClick={e => e.stopPropagation()}>
@@ -175,7 +175,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Project grid */}
+        {}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-brand-border border border-brand-border">
             {[1, 2, 3].map(i => (

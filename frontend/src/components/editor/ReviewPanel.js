@@ -17,7 +17,7 @@ export default function ReviewPanel({ comments, onAddComment, onDeleteComment, a
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-      {/* Header */}
+      {}
       <div className="h-8 px-3 flex items-center justify-between border-b border-brand-border shrink-0" style={{ backgroundColor: 'var(--surface-1)' }}>
         <span className="text-[10px] font-mono uppercase tracking-widest text-brand-text3">Code Review</span>
         <button
@@ -28,7 +28,7 @@ export default function ReviewPanel({ comments, onAddComment, onDeleteComment, a
         </button>
       </div>
 
-      {/* Add comment dialog */}
+      {}
       {isAdding && (
         <form onSubmit={handleSubmit} className="p-3 border-b border-brand-border space-y-2 shrink-0 bg-brand-surface2" style={{ backgroundColor: 'var(--surface-2)' }}>
           <div>
@@ -66,7 +66,7 @@ export default function ReviewPanel({ comments, onAddComment, onDeleteComment, a
         </form>
       )}
 
-      {/* Comments List */}
+      {}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         <div
           style={{
@@ -96,7 +96,7 @@ export default function ReviewPanel({ comments, onAddComment, onDeleteComment, a
                   className="border border-brand-border bg-brand-surface1 p-2 rounded-sm text-xs hover:border-brand-accent transition-colors"
                   style={{ backgroundColor: 'var(--surface-1)' }}
                 >
-                  {/* Metadata */}
+                  {}
                   <div className="flex items-center justify-between border-b border-brand-border pb-1 mb-1">
                     <span
                       onClick={() => onSelectLine && onSelectLine(c.line_number)}
@@ -117,7 +117,7 @@ export default function ReviewPanel({ comments, onAddComment, onDeleteComment, a
                       </button>
                     </div>
                   </div>
-                  {/* Text */}
+                  {}
                   <p className="text-brand-text2 font-mono text-[11px] leading-normal whitespace-pre-wrap">{c.comment}</p>
                 </div>
               ))}

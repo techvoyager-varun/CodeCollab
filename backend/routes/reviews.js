@@ -4,7 +4,7 @@ const { verifyToken } = require('../middleware/auth');
 
 const router = express.Router();
 
-// POST /api/reviews
+
 router.post('/', verifyToken, async (req, res) => {
   try {
     const { fileId, lineNumber, comment } = req.body;
@@ -20,10 +20,10 @@ router.post('/', verifyToken, async (req, res) => {
       req.user.username
     );
 
-    // Emit live socket event if io is bound to app
+    
     const io = req.app.get('io');
     if (io) {
-      // Find room/project connection? Simple broadcast or direct event on fileId room
+      
       io.emit(`file-comment-add:${fileId}`, review);
     }
 
@@ -34,7 +34,7 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-// GET /api/reviews/:fileId
+
 router.get('/:fileId', verifyToken, async (req, res) => {
   try {
     const reviews = await ReviewComment.findByFile(req.params.fileId);
@@ -45,7 +45,7 @@ router.get('/:fileId', verifyToken, async (req, res) => {
   }
 });
 
-// DELETE /api/reviews/:id
+
 router.delete('/:id', verifyToken, async (req, res) => {
   try {
     await ReviewComment.delete(req.params.id);

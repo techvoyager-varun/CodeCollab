@@ -20,7 +20,7 @@ async function initTables() {
   try {
     await pool.query('CREATE EXTENSION IF NOT EXISTS "pgcrypto"');
     
-    // Try to enable pgvector — skip if not available (dev without pgvector)
+    
     try {
       await pool.query('CREATE EXTENSION IF NOT EXISTS "vector"');
       console.log('[DB] pgvector extension enabled');
@@ -121,7 +121,7 @@ async function initTables() {
       )
     `);
 
-    // Embeddings table — only if pgvector is available
+    
     try {
       await pool.query(`
         CREATE TABLE IF NOT EXISTS embeddings (
@@ -138,7 +138,7 @@ async function initTables() {
         ON embeddings USING hnsw (embedding vector_cosine_ops)
       `);
     } catch (e) {
-      // pgvector not available
+      
     }
 
     console.log('[DB] Tables initialized');

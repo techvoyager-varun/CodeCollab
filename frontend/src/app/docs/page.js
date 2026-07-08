@@ -50,7 +50,7 @@ export default function DocsPage() {
 
   return (
     <main className="flex-1">
-      {/* Header */}
+      {}
       <header className="sticky top-0 z-50 border-b border-brand-border" style={{ backgroundColor: 'var(--base)' }}>
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-xs text-brand-text2 hover:text-brand-text1 transition-colors font-mono">
@@ -67,7 +67,7 @@ export default function DocsPage() {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {}
       <section className="border-b border-brand-border">
         <div className="max-w-4xl mx-auto px-6 py-16 text-left">
           <p className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: 'var(--accent)' }}>
@@ -80,7 +80,7 @@ export default function DocsPage() {
         </div>
       </section>
 
-      {/* Guide Steps */}
+      {}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-6">
           <div className="flex flex-col border border-brand-border divide-y divide-brand-border">
@@ -117,7 +117,7 @@ export default function DocsPage() {
         </div>
       </section>
 
-      {/* Call to Action */}
+      {}
       <section className="border-t border-brand-border py-16 bg-brand-surface1">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-xl font-bold mb-4">Ready to start collaborating?</h2>

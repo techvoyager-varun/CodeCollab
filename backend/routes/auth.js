@@ -8,7 +8,7 @@ const { authLimiter } = require('../middleware/rateLimiter');
 
 const router = express.Router();
 
-// Validation schemas
+
 const registerSchema = z.object({
   username: z.string()
     .min(3, 'Username must be at least 3 characters')
@@ -29,7 +29,7 @@ const loginSchema = z.object({
     .min(6, 'Password must be at least 6 characters')
 });
 
-// POST /api/auth/register
+
 router.post('/register', authLimiter, async (req, res) => {
   try {
     const parsed = registerSchema.safeParse(req.body);
@@ -77,7 +77,7 @@ router.post('/register', authLimiter, async (req, res) => {
   }
 });
 
-// POST /api/auth/login
+
 router.post('/login', authLimiter, async (req, res) => {
   try {
     const parsed = loginSchema.safeParse(req.body);
@@ -120,7 +120,7 @@ router.post('/login', authLimiter, async (req, res) => {
   }
 });
 
-// GET /api/auth/me
+
 router.get('/me', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -134,7 +134,7 @@ router.get('/me', verifyToken, async (req, res) => {
   }
 });
 
-// GET /api/auth/search?q=
+
 router.get('/search', verifyToken, async (req, res) => {
   try {
     const { q } = req.query;

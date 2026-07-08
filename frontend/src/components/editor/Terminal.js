@@ -3,7 +3,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 
 export default function Terminal({ output, onClose, onRunWithInput, onSendStdin, onClear, onKill, socket, onDiagnoseError }) {
   const [height, setHeight] = useState(200);
-  const [activeTab, setActiveTab] = useState('runner'); // runner | shell
+  const [activeTab, setActiveTab] = useState('runner'); 
   const [stdinInput, setStdinInput] = useState('');
   const [shellInput, setShellInput] = useState('');
   const [shellOutput, setShellOutput] = useState('');
@@ -14,7 +14,7 @@ export default function Terminal({ output, onClose, onRunWithInput, onSendStdin,
   const scrollRef = useRef(null);
   const shellScrollRef = useRef(null);
 
-  // Auto-scroll to bottom when output/shellOutput changes
+  
   useEffect(() => {
     if (activeTab === 'runner' && scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -23,11 +23,11 @@ export default function Terminal({ output, onClose, onRunWithInput, onSendStdin,
     }
   }, [output, shellOutput, activeTab]);
 
-  // Handle shell sockets
+  
   useEffect(() => {
     if (!socket || activeTab !== 'shell') return;
 
-    // Request terminal shell initialization
+    
     socket.emit('terminal-init');
 
     const handleOutput = (data) => {
@@ -113,19 +113,19 @@ export default function Terminal({ output, onClose, onRunWithInput, onSendStdin,
       className="border-t border-brand-border flex flex-col shrink-0"
       style={{ height: `${height}px`, backgroundColor: 'var(--base)' }}
     >
-      {/* Drag handle */}
+      {}
       <div
         onMouseDown={handleMouseDown}
         className="h-1 cursor-ns-resize hover:bg-brand-accent shrink-0 transition-colors"
         style={{ backgroundColor: 'var(--border)' }}
       />
 
-      {/* Terminal Header */}
+      {}
       <div
         className="h-7 px-3 flex items-center justify-between border-b border-brand-border shrink-0"
         style={{ backgroundColor: 'var(--surface-1)' }}
       >
-        {/* Tabs */}
+        {}
         <div className="flex gap-2 h-full items-center">
           <button
             onClick={() => setActiveTab('runner')}
@@ -149,7 +149,7 @@ export default function Terminal({ output, onClose, onRunWithInput, onSendStdin,
           </button>
         </div>
 
-        {/* Toolbar Buttons */}
+        {}
         <div className="flex items-center gap-2">
           {activeTab === 'runner' ? (
             <>
@@ -197,10 +197,10 @@ export default function Terminal({ output, onClose, onRunWithInput, onSendStdin,
         </div>
       </div>
 
-      {/* Terminal View Container */}
+      {}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         {activeTab === 'runner' ? (
-          /* Runner View */
+          
           <div
             ref={scrollRef}
             style={{
@@ -257,7 +257,7 @@ export default function Terminal({ output, onClose, onRunWithInput, onSendStdin,
             )}
           </div>
         ) : (
-          /* Interactive CLI View */
+          
           <div
             ref={shellScrollRef}
             style={{
@@ -283,9 +283,9 @@ export default function Terminal({ output, onClose, onRunWithInput, onSendStdin,
         )}
       </div>
 
-      {/* Input Bar */}
+      {}
       {activeTab === 'runner' ? (
-        /* Runner Input */
+        
         <form
           onSubmit={handleRunnerSubmit}
           className="shrink-0 px-2 py-1.5 border-t border-brand-border flex items-start gap-2"
@@ -310,7 +310,7 @@ export default function Terminal({ output, onClose, onRunWithInput, onSendStdin,
           </button>
         </form>
       ) : (
-        /* CLI Shell Input */
+        
         <form
           onSubmit={handleShellSubmit}
           className="shrink-0 px-2 py-1.5 border-t border-brand-border flex items-center gap-2"

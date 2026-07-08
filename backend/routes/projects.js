@@ -4,7 +4,7 @@ const { verifyToken } = require('../middleware/auth');
 
 const router = express.Router();
 
-// POST /api/projects
+
 router.post('/', verifyToken, async (req, res) => {
   try {
     const { name, description, language } = req.body;
@@ -18,7 +18,7 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-// GET /api/projects
+
 router.get('/', verifyToken, async (req, res) => {
   try {
     const projects = await Project.findByUser(req.user.id);
@@ -29,7 +29,7 @@ router.get('/', verifyToken, async (req, res) => {
   }
 });
 
-// GET /api/projects/:id
+
 router.get('/:id', verifyToken, async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
@@ -46,7 +46,7 @@ router.get('/:id', verifyToken, async (req, res) => {
   }
 });
 
-// PUT /api/projects/:id
+
 router.put('/:id', verifyToken, async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
@@ -61,7 +61,7 @@ router.put('/:id', verifyToken, async (req, res) => {
   }
 });
 
-// DELETE /api/projects/:id
+
 router.delete('/:id', verifyToken, async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
@@ -76,7 +76,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
   }
 });
 
-// POST /api/projects/:id/members
+
 router.post('/:id/members', verifyToken, async (req, res) => {
   try {
     const { userId, role } = req.body;
@@ -93,7 +93,7 @@ router.post('/:id/members', verifyToken, async (req, res) => {
   }
 });
 
-// GET /api/projects/:id/members
+
 router.get('/:id/members', verifyToken, async (req, res) => {
   try {
     const members = await Project.getMembers(req.params.id);

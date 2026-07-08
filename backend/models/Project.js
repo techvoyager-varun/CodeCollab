@@ -14,7 +14,7 @@ const Project = {
 
       const project = result.rows[0];
 
-      // Add owner as member
+      
       await client.query(
         `INSERT INTO project_members (project_id, user_id, role) VALUES ($1, $2, 'owner')`,
         [project.id, ownerId]

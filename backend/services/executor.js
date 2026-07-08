@@ -5,8 +5,8 @@ const os = require('os');
 const { v4: uuidv4 } = require('uuid');
 const pidusage = require('pidusage');
 
-const TIMEOUT_MS = 10000; // 10 seconds
-const MAX_OUTPUT = 10000; // 10KB output limit
+const TIMEOUT_MS = 10000; 
+const MAX_OUTPUT = 10000; 
 
 const LANGUAGE_CONFIG = {
   javascript: { ext: '.js', buildCmd: null, getSpawn: (file, out) => ({ cmd: 'node', args: [file] }) },
@@ -40,17 +40,17 @@ async function executeCode(language, code, stdin = '') {
   const outPath = path.join(tmpDir, `codecollab_${fileId}${os.platform() === 'win32' ? '.exe' : '.out'}`);
 
   try {
-    // Write code to temp file
+    
     fs.writeFileSync(filePath, code, 'utf8');
 
-    // Build step if needed
+    
     if (config.buildCmd) {
       try {
         execSync(config.buildCmd(filePath, outPath), { timeout: TIMEOUT_MS, maxBuffer: MAX_OUTPUT });
       } catch (buildErr) {
-        // Cleanup
-        try { fs.unlinkSync(filePath); } catch (e) { /* ignore */ }
-        try { fs.unlinkSync(outPath); } catch (e) { /* ignore */ }
+        
+        try { fs.unlinkSync(filePath); } catch (e) {  }
+        try { fs.unlinkSync(outPath); } catch (e) {  }
         return {
           stdout: '',
           stderr: buildErr.stderr ? buildErr.stderr.toString().slice(0, MAX_OUTPUT) : buildErr.message,
@@ -82,7 +82,7 @@ async function executeCode(language, code, stdin = '') {
         if (stderr.length > MAX_OUTPUT) stderr = stderr.slice(0, MAX_OUTPUT);
       });
 
-      // Write stdin input if provided
+      
       if (stdin) {
         child.stdin.write(stdin);
         child.stdin.end();
@@ -102,7 +102,7 @@ async function executeCode(language, code, stdin = '') {
         }
       }, 100);
 
-      // Kill after timeout
+      
       const timer = setTimeout(() => {
         child.kill('SIGKILL');
       }, TIMEOUT_MS);
@@ -113,9 +113,9 @@ async function executeCode(language, code, stdin = '') {
         clearTimeout(timer);
         const executionTime = Date.now() - startTime;
 
-        // Cleanup temp files
-        try { fs.unlinkSync(filePath); } catch (e) { /* ignore */ }
-        try { fs.unlinkSync(outPath); } catch (e) { /* ignore */ }
+        
+        try { fs.unlinkSync(filePath); } catch (e) {  }
+        try { fs.unlinkSync(outPath); } catch (e) {  }
 
         if (executionTime >= TIMEOUT_MS) {
           resolve({
@@ -142,8 +142,8 @@ async function executeCode(language, code, stdin = '') {
         try { pidusage.clear(); } catch (e) {}
         clearTimeout(timer);
         const executionTime = Date.now() - startTime;
-        try { fs.unlinkSync(filePath); } catch (e) { /* ignore */ }
-        try { fs.unlinkSync(outPath); } catch (e) { /* ignore */ }
+        try { fs.unlinkSync(filePath); } catch (e) {  }
+        try { fs.unlinkSync(outPath); } catch (e) {  }
         resolve({
           stdout: '',
           stderr: err.message,
@@ -154,8 +154,8 @@ async function executeCode(language, code, stdin = '') {
       });
     });
   } catch (err) {
-    try { fs.unlinkSync(filePath); } catch (e) { /* ignore */ }
-    try { fs.unlinkSync(outPath); } catch (e) { /* ignore */ }
+    try { fs.unlinkSync(filePath); } catch (e) {  }
+    try { fs.unlinkSync(outPath); } catch (e) {  }
     return {
       stdout: '',
       stderr: err.message,

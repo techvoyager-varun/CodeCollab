@@ -4,7 +4,7 @@ const { verifyToken } = require('../middleware/auth');
 
 const router = express.Router();
 
-// GET /api/chat/:roomId
+
 router.get('/:roomId', verifyToken, async (req, res) => {
   try {
     const { limit = 50, offset = 0 } = req.query;
@@ -16,7 +16,7 @@ router.get('/:roomId', verifyToken, async (req, res) => {
   }
 });
 
-// POST /api/chat/:roomId
+
 router.post('/:roomId', verifyToken, async (req, res) => {
   try {
     const { content, type, replyTo } = req.body;

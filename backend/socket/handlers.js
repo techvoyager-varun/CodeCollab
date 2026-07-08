@@ -10,19 +10,19 @@ const { v4: uuidv4 } = require('uuid');
 const { LANGUAGE_CONFIG } = require('../services/executor');
 const pidusage = require('pidusage');
 
-// Track active interactive processes per socket ID
+
 const activeProcesses = new Map();
 
-// Track active interactive terminal shells per socket ID
+
 const activeShells = new Map();
 
-// Track active users per room
+
 const roomUsers = new Map();
 
-// Track active room whiteboards (in-memory)
+
 const roomWhiteboards = new Map();
 
-// Track active room WebRTC voice users (in-memory)
+
 const roomVoiceUsers = new Map();
 
 function handleLeaveVoice(socket) {
@@ -61,14 +61,14 @@ function setupSocketHandlers(io) {
     let currentRoom = null;
     let currentUser = null;
 
-    // Join room
+    
     socket.on('join-room', async ({ roomId, user }) => {
       currentRoom = roomId;
       currentUser = user;
 
       socket.join(roomId);
 
-      // Sync project files to local workspace directory
+      
       try {
         const room = await Room.findById(roomId);
         if (room) {
@@ -88,7 +88,7 @@ function setupSocketHandlers(io) {
       }
 
       if (user) {
-        // Track user in room
+        
         if (!roomUsers.has(roomId)) {
           roomUsers.set(roomId, new Map());
         }
@@ -99,11 +99,11 @@ function setupSocketHandlers(io) {
           socketId: socket.id
         });
 
-        // Broadcast updated user list
+        
         const users = Array.from(roomUsers.get(roomId).values());
         io.to(roomId).emit('room-users', users);
 
-        // Notify others
+        
         socket.to(roomId).emit('user-joined', {
           username: user.username,
           avatarColor: user.avatarColor
@@ -113,14 +113,14 @@ function setupSocketHandlers(io) {
       }
     });
 
-    // Leave room
+    
     socket.on('leave-room', () => {
       if (currentRoom && currentUser) {
         handleLeaveRoom(socket, io);
       }
     });
 
-    // Code change — broadcast to others in room
+    
     socket.on('code-change', ({ fileId, changes, version }) => {
       if (currentRoom) {
         socket.to(currentRoom).emit('code-change', {
@@ -132,7 +132,7 @@ function setupSocketHandlers(io) {
       }
     });
 
-    // Cursor position
+    
     socket.on('cursor-move', ({ fileId, position, selection }) => {
       if (currentRoom && currentUser) {
         socket.to(currentRoom).emit('cursor-move', {
@@ -146,7 +146,7 @@ function setupSocketHandlers(io) {
       }
     });
 
-    // File save
+    
     socket.on('file-save', async ({ fileId, content }) => {
       if (currentRoom) {
         try {
@@ -171,7 +171,7 @@ function setupSocketHandlers(io) {
       }
     });
 
-    // Chat message
+    
     socket.on('chat-message', async ({ roomId, content, type, replyTo }) => {
       if (currentUser) {
         try {
@@ -193,7 +193,7 @@ function setupSocketHandlers(io) {
       }
     });
 
-    // Typing indicator
+    
     socket.on('typing-start', () => {
       if (currentRoom && currentUser) {
         socket.to(currentRoom).emit('typing-start', {
@@ -212,7 +212,7 @@ function setupSocketHandlers(io) {
       }
     });
 
-    // File tree change notification
+    
     socket.on('file-tree-change', async ({ action, file }) => {
       if (socket.workspaceDir && file) {
         try {
@@ -238,7 +238,7 @@ function setupSocketHandlers(io) {
       }
     });
 
-    // Live Terminal Execution
+    
     socket.on('execute-start', async ({ code, language }) => {
       killActiveProcess(socket.id);
 
@@ -257,7 +257,7 @@ function setupSocketHandlers(io) {
       try {
         fs.writeFileSync(filePath, code, 'utf8');
 
-        // Build step if needed
+        
         if (config.buildCmd) {
           socket.emit('execute-output', { type: 'stdout', data: 'Compiling code...\r\n' });
           try {
@@ -292,7 +292,7 @@ function setupSocketHandlers(io) {
           }
         }, 100);
 
-        // Store active process
+        
         activeProcesses.set(socket.id, {
           child,
           filePath,
@@ -361,7 +361,7 @@ function setupSocketHandlers(io) {
       if (proc && proc.child && proc.child.stdin && proc.child.stdin.writable) {
         proc.child.stdin.write(text + '\n');
 
-        // Reset process timeout timer
+        
         clearTimeout(proc.timer);
         proc.timer = setTimeout(() => {
           killActiveProcess(socket.id);
@@ -374,7 +374,7 @@ function setupSocketHandlers(io) {
       killActiveProcess(socket.id);
     });
 
-    // Whiteboard Sync Events
+    
     socket.on('whiteboard-load', () => {
       if (currentRoom) {
         const shapes = roomWhiteboards.get(currentRoom) || [];
@@ -429,7 +429,7 @@ function setupSocketHandlers(io) {
       }
     });
 
-    // WebRTC Voice Chat Signaling Events
+    
     socket.on('webrtc-join-voice', () => {
       if (currentRoom && currentUser) {
         if (!roomVoiceUsers.has(currentRoom)) {
@@ -466,7 +466,7 @@ function setupSocketHandlers(io) {
       handleLeaveVoice(socket);
     });
 
-    // Live Terminal interactive shell events
+    
     socket.on('terminal-init', () => {
       if (!socket.workspaceDir) {
         socket.emit('terminal-output', '\r\nWorkspace directory not found. Please re-join the room.\r\n');
@@ -506,7 +506,7 @@ function setupSocketHandlers(io) {
       }
     });
 
-    // Disconnect
+    
     socket.on('disconnect', () => {
       killActiveProcess(socket.id);
       killActiveShell(socket.id);
@@ -521,7 +521,7 @@ function handleLeaveRoom(socket, io) {
   killActiveShell(socket.id);
   handleLeaveVoice(socket);
 
-  // Find which room this socket was in
+  
   for (const [roomId, users] of roomUsers.entries()) {
     if (users.has(socket.id)) {
       const user = users.get(socket.id);
@@ -531,16 +531,16 @@ function handleLeaveRoom(socket, io) {
         roomUsers.delete(roomId);
       }
 
-      // Broadcast updated user list
+      
       const remainingUsers = Array.from(users.values());
       io.to(roomId).emit('room-users', remainingUsers);
 
-      // Notify others
+      
       socket.to(roomId).emit('user-left', {
         username: user.username
       });
 
-      // Remove cursor
+      
       socket.to(roomId).emit('cursor-remove', {
         userId: user.id
       });

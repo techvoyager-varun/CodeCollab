@@ -5,7 +5,7 @@ const { verifyToken } = require('../middleware/auth');
 
 const router = express.Router();
 
-// POST /api/files
+
 router.post('/', verifyToken, async (req, res) => {
   try {
     const { name, path, projectId, type, parentId, content } = req.body;
@@ -25,7 +25,7 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-// GET /api/files/tree/:projectId
+
 router.get('/tree/:projectId', verifyToken, async (req, res) => {
   try {
     const isMember = await Project.isMember(req.params.projectId, req.user.id);
@@ -39,7 +39,7 @@ router.get('/tree/:projectId', verifyToken, async (req, res) => {
   }
 });
 
-// GET /api/files/:id/content
+
 router.get('/:id/content', verifyToken, async (req, res) => {
   try {
     const file = await File.getContent(req.params.id);
@@ -51,7 +51,7 @@ router.get('/:id/content', verifyToken, async (req, res) => {
   }
 });
 
-// PUT /api/files/:id
+
 router.put('/:id', verifyToken, async (req, res) => {
   try {
     const { content } = req.body;
@@ -64,7 +64,7 @@ router.put('/:id', verifyToken, async (req, res) => {
   }
 });
 
-// PUT /api/files/:id/rename
+
 router.put('/:id/rename', verifyToken, async (req, res) => {
   try {
     const { name, path } = req.body;
@@ -79,7 +79,7 @@ router.put('/:id/rename', verifyToken, async (req, res) => {
   }
 });
 
-// DELETE /api/files/:id
+
 router.delete('/:id', verifyToken, async (req, res) => {
   try {
     await File.delete(req.params.id);

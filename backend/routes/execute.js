@@ -4,7 +4,7 @@ const { executeCode } = require('../services/executor');
 
 const router = express.Router();
 
-// POST /api/execute
+
 router.post('/', verifyToken, async (req, res) => {
   try {
     const { code, language, stdin } = req.body;

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-// Test the chunking function logic
+
 function chunkText(text, chunkSize = 500, overlap = 50) {
   const chunks = [];
   const lines = text.split('\n');
@@ -44,7 +44,7 @@ describe('AI / RAG', () => {
     const lines = Array(100).fill('x'.repeat(20));
     const text = lines.join('\n');
     const chunks = chunkText(text, 200, 50);
-    // Consecutive chunks should share some content
+    
     if (chunks.length >= 2) {
       const lastLinesOfFirst = chunks[0].split('\n').slice(-2);
       const firstLinesOfSecond = chunks[1].split('\n').slice(0, 2);

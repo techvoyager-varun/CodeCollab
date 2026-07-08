@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 
 export default function Whiteboard({ socket, roomId }) {
   const [shapes, setShapes] = useState([]);
-  const [activeTool, setActiveTool] = useState('pencil'); // pencil | line | rect | circle | eraser
+  const [activeTool, setActiveTool] = useState('pencil'); 
   const [activeColor, setActiveColor] = useState('var(--accent)');
   const [activeWidth, setActiveWidth] = useState(4);
   const [currentDrawingPath, setCurrentDrawingPath] = useState(null);
@@ -14,14 +14,14 @@ export default function Whiteboard({ socket, roomId }) {
   const svgRef = useRef(null);
   const isDrawing = useRef(false);
 
-  // Ask for current shapes when component mounts or socket connects
+  
   useEffect(() => {
     if (socket) {
       socket.emit('whiteboard-load');
     }
   }, [socket]);
 
-  // Handle socket sync
+  
   useEffect(() => {
     if (!socket) return;
 
@@ -89,7 +89,7 @@ export default function Whiteboard({ socket, roomId }) {
     };
   }, [socket]);
 
-  // Translate client coordinates to SVG viewport coordinates
+  
   const getCoordinates = useCallback((e) => {
     if (!svgRef.current) return { x: 0, y: 0 };
     const rect = svgRef.current.getBoundingClientRect();
@@ -100,7 +100,7 @@ export default function Whiteboard({ socket, roomId }) {
   }, []);
 
   const handleMouseDown = (e) => {
-    if (e.button !== 0) return; // Only draw on primary click
+    if (e.button !== 0) return; 
     const coords = getCoordinates(e);
     isDrawing.current = true;
 
@@ -140,7 +140,7 @@ export default function Whiteboard({ socket, roomId }) {
   const handleMouseMove = (e) => {
     const coords = getCoordinates(e);
 
-    // Sync cursor presence
+    
     if (socket) {
       socket.emit('whiteboard-cursor', coords);
     }
@@ -176,7 +176,7 @@ export default function Whiteboard({ socket, roomId }) {
     if (!isDrawing.current || !currentDrawingPath) return;
     isDrawing.current = false;
 
-    // Filter out invalid/empty shapes
+    
     let isValid = true;
     if (currentDrawingPath.type === 'pencil' || currentDrawingPath.type === 'eraser') {
       if (currentDrawingPath.points.length < 2) isValid = false;
@@ -285,10 +285,10 @@ export default function Whiteboard({ socket, roomId }) {
 
   return (
     <div className="w-full h-full flex flex-col relative select-none" style={{ backgroundColor: 'var(--base)' }}>
-      {/* Floating Whiteboard Control Bar */}
+      {}
       <div className="absolute top-3 left-1/2 transform -translate-x-1/2 z-10 flex flex-wrap items-center gap-4 bg-brand-surface1 border border-brand-border px-3 py-1.5 shadow-md">
         
-        {/* Drawing Tools */}
+        {}
         <div className="flex items-center gap-1">
           {tools.map(tool => (
             <button
@@ -307,7 +307,7 @@ export default function Whiteboard({ socket, roomId }) {
 
         <div className="w-px h-4 bg-brand-border" />
 
-        {/* Color Palette (disabled when using eraser) */}
+        {}
         <div className={`flex items-center gap-1.5 ${activeTool === 'eraser' ? 'opacity-30 pointer-events-none' : ''}`}>
           {colors.map(color => (
             <button
@@ -326,7 +326,7 @@ export default function Whiteboard({ socket, roomId }) {
 
         <div className="w-px h-4 bg-brand-border" />
 
-        {/* Stroke Thickness */}
+        {}
         <div className="flex items-center gap-2">
           {[2, 4, 8].map(size => (
             <button
@@ -352,7 +352,7 @@ export default function Whiteboard({ socket, roomId }) {
 
         <div className="w-px h-4 bg-brand-border" />
 
-        {/* Clear Action */}
+        {}
         <button
           onClick={handleClear}
           className="text-xs font-mono font-semibold px-2 py-1 transition-colors hover:bg-brand-error/10 cursor-pointer"
@@ -363,7 +363,7 @@ export default function Whiteboard({ socket, roomId }) {
         </button>
       </div>
 
-      {/* SVG Draw Area */}
+      {}
       <svg
         ref={svgRef}
         onMouseDown={handleMouseDown}
@@ -373,7 +373,7 @@ export default function Whiteboard({ socket, roomId }) {
         className="flex-1 w-full h-full cursor-crosshair outline-none"
         style={{ touchAction: 'none' }}
       >
-        {/* Blueprint architectural grid background */}
+        {}
         <defs>
           <pattern id="whiteboard-grid" width="30" height="30" patternUnits="userSpaceOnUse">
             <path d="M 30 0 L 0 0 0 30" fill="none" stroke="var(--border)" strokeWidth="0.5" opacity="0.15" />
@@ -381,24 +381,24 @@ export default function Whiteboard({ socket, roomId }) {
         </defs>
         <rect width="100%" height="100%" fill="url(#whiteboard-grid)" />
 
-        {/* SVG Drawing elements */}
+        {}
         {shapes.map((shape) => renderShape(shape, shape.id))}
 
-        {/* Peer temporary drawings */}
+        {}
         {Object.entries(remoteRawDraws).map(([userId, draw]) => {
           if (!draw.tempShape) return null;
           return renderShape(draw.tempShape, `${userId}-raw`);
         })}
 
-        {/* Active Drawing path preview */}
+        {}
         {currentDrawingPath && renderShape(currentDrawingPath, 'active-preview')}
 
-        {/* Collaborative presence cursors */}
+        {}
         {Object.entries(remoteCursors).map(([userId, cursor]) => {
           if (!cursor.pos) return null;
           return (
             <g key={userId} className="pointer-events-none transition-transform duration-75">
-              {/* Pointer drawing */}
+              {}
               <path
                 d="M 0 0 L 0 16 L 4 12 L 8 20 L 11 18 L 7 11 L 12 11 Z"
                 fill={cursor.avatarColor || 'var(--accent)'}
@@ -406,7 +406,7 @@ export default function Whiteboard({ socket, roomId }) {
                 strokeWidth="1.5"
                 transform={`translate(${cursor.pos.x}, ${cursor.pos.y})`}
               />
-              {/* Tooltip containing Username */}
+              {}
               <g transform={`translate(${cursor.pos.x + 12}, ${cursor.pos.y + 12})`}>
                 <rect
                   x="0"

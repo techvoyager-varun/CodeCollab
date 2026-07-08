@@ -27,7 +27,7 @@ function optionalAuth(req, res, next) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = { id: decoded.id, username: decoded.username, role: decoded.role };
     } catch (err) {
-      // Token invalid — continue without auth
+      
     }
   }
   next();

@@ -6,15 +6,15 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
   const [inVoice, setInVoice] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isSharingScreen, setIsSharingScreen] = useState(false);
-  const [peers, setPeers] = useState([]); // Array of peer users in voice
-  const [screenShareUser, setScreenShareUser] = useState(null); // User who is currently screen sharing
-  const [remoteScreenStream, setRemoteScreenStream] = useState(null); // Stream for remote screen sharing
+  const [peers, setPeers] = useState([]); 
+  const [screenShareUser, setScreenShareUser] = useState(null); 
+  const [remoteScreenStream, setRemoteScreenStream] = useState(null); 
 
   const toast = useToast();
   const localStreamRef = useRef(null);
   const screenStreamRef = useRef(null);
-  const pcsRef = useRef({}); // targetSocketId -> RTCPeerConnection
-  const audiosRef = useRef({}); // targetSocketId -> HTMLAudioElement
+  const pcsRef = useRef({}); 
+  const audiosRef = useRef({}); 
   const screenVideoRef = useRef(null);
 
   const iceConfig = {
@@ -24,14 +24,14 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     ]
   };
 
-  // Safe side effect to bind incoming video stream to video DOM element ref once mounted
+  
   useEffect(() => {
     if (screenVideoRef.current) {
       screenVideoRef.current.srcObject = remoteScreenStream;
     }
   }, [remoteScreenStream]);
 
-  // Toggle voice room join/leave
+  
   const toggleVoice = async () => {
     if (inVoice) {
       leaveVoiceRoom();
@@ -40,7 +40,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     }
   };
 
-  // Toggle microphone mute
+  
   const toggleMute = () => {
     if (localStreamRef.current) {
       const audioTrack = localStreamRef.current.getAudioTracks()[0];
@@ -51,7 +51,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     }
   };
 
-  // Join Voice Room and start WebRTC peer discovery
+  
   const joinVoiceRoom = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -66,24 +66,24 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     }
   };
 
-  // Leave voice room and close all peer connections
+  
   const leaveVoiceRoom = () => {
     socket.emit('webrtc-leave-voice');
     
-    // Stop local media
+    
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(t => t.stop());
       localStreamRef.current = null;
     }
     stopScreenShare();
 
-    // Close all peer connections
+    
     Object.keys(pcsRef.current).forEach(socketId => {
       pcsRef.current[socketId].close();
     });
     pcsRef.current = {};
 
-    // Remove all remote audios
+    
     Object.keys(audiosRef.current).forEach(socketId => {
       audiosRef.current[socketId].remove();
     });
@@ -97,7 +97,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     toast.success('Left voice room');
   };
 
-  // Start screen share
+  
   const startScreenShare = async () => {
     try {
       const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
@@ -106,13 +106,13 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
 
       const videoTrack = stream.getVideoTracks()[0];
 
-      // Send screen share start event
+      
       socket.emit('webrtc-signal', {
         targetSocketId: 'all',
         signal: { type: 'screen-share-start', senderName: currentUser?.username }
       });
 
-      // Add screen track to all peer connections
+      
       Object.keys(pcsRef.current).forEach(socketId => {
         const pc = pcsRef.current[socketId];
         const senders = pc.getSenders();
@@ -123,11 +123,11 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
           pc.addTrack(videoTrack, stream);
         }
         
-        // Renegotiate
+        
         createAndSendOffer(socketId);
       });
 
-      // Handle stream end (user clicks browser "Stop Sharing")
+      
       videoTrack.onended = () => {
         stopScreenShare();
       };
@@ -139,7 +139,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     }
   };
 
-  // Stop screen share
+  
   const stopScreenShare = () => {
     if (screenStreamRef.current) {
       screenStreamRef.current.getTracks().forEach(t => t.stop());
@@ -147,7 +147,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     }
     setIsSharingScreen(false);
 
-    // Remove video track from all peer connections
+    
     Object.keys(pcsRef.current).forEach(socketId => {
       const pc = pcsRef.current[socketId];
       const senders = pc.getSenders();
@@ -164,14 +164,14 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     });
   };
 
-  // Create Peer Connection
+  
   const createPeerConnection = (targetSocketId, userObj) => {
     if (pcsRef.current[targetSocketId]) return pcsRef.current[targetSocketId];
 
     const pc = new RTCPeerConnection(iceConfig);
     pcsRef.current[targetSocketId] = pc;
 
-    // Send local tracks
+    
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => {
         pc.addTrack(track, localStreamRef.current);
@@ -183,7 +183,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
       });
     }
 
-    // Ice Candidate callback
+    
     pc.onicecandidate = (event) => {
       if (event.candidate) {
         socket.emit('webrtc-signal', {
@@ -193,7 +193,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
       }
     };
 
-    // Receive Remote Streams
+    
     pc.ontrack = (event) => {
       const [remoteStream] = event.streams;
       const track = event.track;
@@ -208,7 +208,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
         }
         audio.srcObject = remoteStream;
       } else if (track.kind === 'video') {
-        // Screen share video stream
+        
         setScreenShareUser(userObj?.username || 'Peer');
         setRemoteScreenStream(remoteStream);
       }
@@ -232,11 +232,11 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     }
   };
 
-  // Setup sockets
+  
   useEffect(() => {
     if (!socket) return;
 
-    // Receive peer list on joining
+    
     socket.on('webrtc-voice-peers', (peersList) => {
       setPeers(peersList);
       peersList.forEach(peer => {
@@ -245,7 +245,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
       });
     });
 
-    // New peer joined
+    
     socket.on('webrtc-peer-joined', (peer) => {
       setPeers(prev => {
         if (prev.find(p => p.socketId === peer.socketId)) return prev;
@@ -254,9 +254,9 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
       createPeerConnection(peer.socketId, peer);
     });
 
-    // Receive signaling signal (SDP or Candidate)
+    
     socket.on('webrtc-signal', async ({ senderSocketId, signal }) => {
-      // Find sender info
+      
       const senderUser = peers.find(p => p.socketId === senderSocketId);
       
       if (signal.type === 'screen-share-start') {
@@ -296,7 +296,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
       }
     });
 
-    // Peer left voice
+    
     socket.on('webrtc-peer-left', ({ socketId }) => {
       setPeers(prev => prev.filter(p => p.socketId !== socketId));
       
@@ -318,7 +318,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
     };
   }, [socket, peers]);
 
-  // Handle room exit unmount cleanup
+  
   useEffect(() => {
     return () => {
       if (localStreamRef.current) {
@@ -334,10 +334,10 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
 
   return (
     <div className="flex flex-col gap-2 p-2 border-t border-brand-border" style={{ backgroundColor: 'var(--surface-1)' }}>
-      {/* Controls Bar */}
+      {}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
-          {/* Join Call button */}
+          {}
           <button
             onClick={toggleVoice}
             className={`px-2.5 py-1 text-[10px] font-mono font-medium rounded-sm border cursor-pointer transition-colors
@@ -353,7 +353,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
             {inVoice ? 'Disconnect Voice' : '🎙 Join Voice Call'}
           </button>
 
-          {/* Mute button */}
+          {}
           {inVoice && (
             <button
               onClick={toggleMute}
@@ -368,7 +368,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
             </button>
           )}
 
-          {/* Screen Share button */}
+          {}
           {inVoice && (
             <button
               onClick={isSharingScreen ? stopScreenShare : startScreenShare}
@@ -384,7 +384,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
           )}
         </div>
 
-        {/* Status Indicators */}
+        {}
         <div className="flex items-center gap-1.5">
           {inVoice && (
             <div className="flex items-center gap-1">
@@ -395,7 +395,7 @@ export default function VoiceManager({ socket, roomId, currentUser }) {
         </div>
       </div>
 
-      {/* Screen Share Video Stream Panel */}
+      {}
       {screenShareUser && (
         <div className="mt-2 relative rounded overflow-hidden border border-brand-border bg-black aspect-video flex flex-col justify-end">
           <video

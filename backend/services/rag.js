@@ -2,7 +2,7 @@ const { pool } = require('../config/database');
 const { askGemini, PROMPTS, getAI } = require('./gemini');
 const File = require('../models/File');
 
-// Chunk code into overlapping segments
+
 function chunkText(text, chunkSize = 500, overlap = 50) {
   const chunks = [];
   const lines = text.split('\n');
@@ -15,7 +15,7 @@ function chunkText(text, chunkSize = 500, overlap = 50) {
 
     if (currentLength >= chunkSize) {
       chunks.push(currentChunk.join('\n'));
-      // Keep last few lines for overlap
+      
       const overlapLines = Math.max(2, Math.floor(overlap / 20));
       currentChunk = currentChunk.slice(-overlapLines);
       currentLength = currentChunk.join('\n').length;
@@ -29,7 +29,7 @@ function chunkText(text, chunkSize = 500, overlap = 50) {
   return chunks;
 }
 
-// Generate embedding using Gemini
+
 async function generateEmbedding(text) {
   try {
     const client = getAI();
@@ -44,7 +44,7 @@ async function generateEmbedding(text) {
   }
 }
 
-// Store embedding in pgvector
+
 async function storeEmbedding(fileId, projectId, chunk, embedding) {
   try {
     const vectorStr = `[${embedding.join(',')}]`;
@@ -58,9 +58,9 @@ async function storeEmbedding(fileId, projectId, chunk, embedding) {
   }
 }
 
-// Index a single file
+
 async function indexFile(fileId, projectId, content, fileName) {
-  // Delete old embeddings for this file
+  
   await pool.query('DELETE FROM embeddings WHERE file_id = $1', [fileId]);
 
   if (!content || content.trim().length === 0) return;
@@ -78,7 +78,7 @@ async function indexFile(fileId, projectId, content, fileName) {
   console.log(`[RAG] Indexed ${chunks.length} chunks from ${fileName}`);
 }
 
-// Index all files in a project
+
 async function indexProject(projectId) {
   const files = await File.findByProject(projectId);
   let totalChunks = 0;
@@ -88,7 +88,7 @@ async function indexProject(projectId) {
       const chunks = chunkText(file.content);
       totalChunks += chunks.length;
 
-      // Delete old embeddings
+      
       await pool.query('DELETE FROM embeddings WHERE file_id = $1', [file.id]);
 
       for (const chunk of chunks) {
@@ -105,7 +105,7 @@ async function indexProject(projectId) {
   return { files: files.length, chunks: totalChunks };
 }
 
-// Similarity search
+
 async function searchSimilar(embedding, projectId, topK = 5) {
   try {
     const vectorStr = `[${embedding.join(',')}]`;
@@ -124,15 +124,15 @@ async function searchSimilar(embedding, projectId, topK = 5) {
   }
 }
 
-// Full RAG query: embed question → search → augment prompt → ask Gemini
+
 async function queryWithContext(question, projectId) {
-  // Generate embedding for the question
+  
   const questionEmbedding = await generateEmbedding(question);
 
   let context = '';
 
   if (questionEmbedding) {
-    // Search for similar chunks
+    
     const results = await searchSimilar(questionEmbedding, projectId);
 
     if (results.length > 0) {
@@ -140,7 +140,7 @@ async function queryWithContext(question, projectId) {
     }
   }
 
-  // If no embeddings found, try to get some file content directly
+  
   if (!context) {
     const files = await File.findByProject(projectId);
     context = files
@@ -149,7 +149,7 @@ async function queryWithContext(question, projectId) {
       .join('\n\n---\n\n');
   }
 
-  // Build RAG prompt and ask Gemini
+  
   const prompt = PROMPTS.ragQuery(question, context);
   const answer = await askGemini(prompt);
   return answer;

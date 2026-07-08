@@ -34,7 +34,7 @@ export default function VersionHistory({ fileId, onRollback }) {
       const data = await api.post(`/api/history/${fileId}/rollback/${versionId}`);
       onRollback(data.file.content);
       toast.success('Rolled back');
-      // Refresh versions
+      
       const updated = await api.get(`/api/history/${fileId}`);
       setVersions(updated.versions);
     } catch (err) {

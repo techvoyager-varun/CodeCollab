@@ -12,7 +12,7 @@ export default function DSAPanel({ activeFile, terminalOutput, onRunCode }) {
 
   const toast = useToast();
 
-  // Watch terminal output changes to catch custom run results
+  
   useEffect(() => {
     if (terminalOutput && !terminalOutput.running) {
       setLastOutput({
@@ -47,7 +47,7 @@ export default function DSAPanel({ activeFile, terminalOutput, onRunCode }) {
     setLastOutput(null);
 
     try {
-      // Prompt AI to grade the active file code as a LeetCode problem submission
+      
       const response = await api.post('/api/ai/ask', {
         question: `Grade this program as a competitive programming (DSA) submission. 
 Evaluate edge cases, correctness, time complexity, and space complexity. 
@@ -75,18 +75,18 @@ ${activeFile.content}`,
     }
   };
 
-  // Compare stdout with expected output
+  
   const runMatchesExpected = lastOutput && expectedOutput.trim() && 
     lastOutput.stdout.trim() === expectedOutput.trim();
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-      {/* Header */}
+      {}
       <div className="h-8 px-3 flex items-center border-b border-brand-border shrink-0" style={{ backgroundColor: 'var(--surface-1)' }}>
         <span className="text-[10px] font-mono uppercase tracking-widest text-brand-text3">🏆 DSA Arena</span>
       </div>
 
-      {/* Content scroll area */}
+      {}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         <div
           style={{
@@ -100,7 +100,7 @@ ${activeFile.content}`,
           }}
           className="space-y-4 font-mono text-xs"
         >
-          {/* Inputs Section */}
+          {}
           <div className="space-y-2">
             <div>
               <label className="block text-[10px] uppercase text-brand-text3 mb-1">Custom Stdin Input</label>
@@ -126,7 +126,7 @@ ${activeFile.content}`,
             </div>
           </div>
 
-          {/* Action buttons */}
+          {}
           <div className="flex gap-2">
             <button
               onClick={handleRun}
@@ -144,7 +144,7 @@ ${activeFile.content}`,
             </button>
           </div>
 
-          {/* Results section */}
+          {}
           {lastOutput && (
             <div className="border border-brand-border rounded p-3 bg-brand-surface1 space-y-2" style={{ backgroundColor: 'var(--surface-1)' }}>
               <div className="font-semibold text-brand-text1 text-[11px] uppercase tracking-wider border-b border-brand-border pb-1">
@@ -172,7 +172,7 @@ ${activeFile.content}`,
                 </div>
               )}
 
-              {/* Match Verification */}
+              {}
               {expectedOutput.trim() && !lastOutput.stderr && (
                 <div className="mt-2 pt-2 border-t border-brand-border flex items-center justify-between">
                   <span className="text-[10px] text-brand-text3 uppercase">Verification:</span>
@@ -184,7 +184,7 @@ ${activeFile.content}`,
             </div>
           )}
 
-          {/* Submission evaluation results */}
+          {}
           {submission && (
             <div className="border border-brand-border rounded p-3 bg-brand-surface1 space-y-2" style={{ backgroundColor: 'var(--surface-1)' }}>
               <div className="font-semibold text-brand-accent text-[11px] uppercase tracking-wider border-b border-brand-border pb-1" style={{ color: 'var(--accent)' }}>

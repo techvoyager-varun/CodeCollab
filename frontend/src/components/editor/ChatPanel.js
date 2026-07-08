@@ -8,7 +8,7 @@ export default function ChatPanel({ roomId, socket, user }) {
   const messagesRef = useRef(null);
   const typingTimeout = useRef(null);
 
-  // Load history
+  
   useEffect(() => {
     async function load() {
       try {
@@ -17,18 +17,18 @@ export default function ChatPanel({ roomId, socket, user }) {
         });
         const data = await res.json();
         if (data.messages) setMessages(data.messages);
-      } catch (e) { /* ignore */ }
+      } catch (e) {  }
     }
     if (roomId) load();
   }, [roomId]);
 
-  // Listen for new messages
+  
   useEffect(() => {
     if (!socket) return;
 
     const handleMsg = (msg) => {
       setMessages(prev => {
-        // Avoid duplicates by checking if ID already exists
+        
         if (msg.id && prev.some(m => m.id === msg.id)) return prev;
         return [...prev, msg];
       });
@@ -39,7 +39,7 @@ export default function ChatPanel({ roomId, socket, user }) {
     };
 
     const handleTypingStop = ({ username, userId }) => {
-      // Remove by username (the server sends username in typing-start)
+      
       setTyping(prev => prev.filter(u => u !== username && u !== userId));
     };
 
@@ -54,7 +54,7 @@ export default function ChatPanel({ roomId, socket, user }) {
     };
   }, [socket]);
 
-  // Auto-scroll to bottom on new messages
+  
   useEffect(() => {
     if (messagesRef.current) {
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
@@ -80,7 +80,7 @@ export default function ChatPanel({ roomId, socket, user }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-      {/* Header */}
+      {}
       <div
         style={{
           height: '32px',
@@ -96,7 +96,7 @@ export default function ChatPanel({ roomId, socket, user }) {
         <span className="ml-auto text-[9px] text-brand-text3 font-mono">{messages.length}</span>
       </div>
 
-      {/* Messages — absolute positioned to fill remaining space */}
+      {}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         <div
           ref={messagesRef}
@@ -151,7 +151,7 @@ export default function ChatPanel({ roomId, socket, user }) {
         </div>
       </div>
 
-      {/* Input */}
+      {}
       <form
         onSubmit={handleSend}
         style={{

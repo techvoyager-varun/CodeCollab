@@ -5,7 +5,7 @@ const { verifyToken } = require('../middleware/auth');
 
 const router = express.Router();
 
-// POST /api/rooms
+
 router.post('/', verifyToken, async (req, res) => {
   try {
     const { projectId, name } = req.body;
@@ -24,7 +24,7 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-// GET /api/rooms/:id
+
 router.get('/:id', verifyToken, async (req, res) => {
   try {
     const room = await Room.findById(req.params.id);
@@ -40,7 +40,7 @@ router.get('/:id', verifyToken, async (req, res) => {
   }
 });
 
-// GET /api/rooms/project/:projectId
+
 router.get('/project/:projectId', verifyToken, async (req, res) => {
   try {
     const rooms = await Room.findByProject(req.params.projectId);
@@ -51,7 +51,7 @@ router.get('/project/:projectId', verifyToken, async (req, res) => {
   }
 });
 
-// DELETE /api/rooms/:id
+
 router.delete('/:id', verifyToken, async (req, res) => {
   try {
     const room = await Room.findById(req.params.id);

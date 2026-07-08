@@ -3,7 +3,7 @@
 export default function TabBar({ files, activeFileId, onSelect, onClose, showWhiteboard, onSelectWhiteboard }) {
   return (
     <div className="h-8 flex items-center bg-brand-surface1 border-b border-brand-border overflow-x-auto shrink-0" style={{ backgroundColor: 'var(--surface-1)' }}>
-      {/* Persistent Whiteboard Tab */}
+      {}
       <div
         className={`flex items-center gap-1.5 px-3 h-full border-r border-brand-border cursor-pointer text-xs shrink-0 transition-colors
           ${showWhiteboard ? 'bg-brand-base text-brand-text1' : 'text-brand-text3 hover:text-brand-text2 hover:bg-brand-surface2'}`}
@@ -13,7 +13,7 @@ export default function TabBar({ files, activeFileId, onSelect, onClose, showWhi
         <span className="font-semibold">🎨 Whiteboard</span>
       </div>
 
-      {/* File Tabs */}
+      {}
       {files && files.map(file => (
         <div
           key={file.id}

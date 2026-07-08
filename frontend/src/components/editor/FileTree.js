@@ -5,7 +5,7 @@ import { useToast } from '@/contexts/ToastContext';
 
 export default function FileTree({ files, activeFileId, projectId, onOpenFile, onFilesChange, socket }) {
   const [expanded, setExpanded] = useState({});
-  const [creating, setCreating] = useState(null); // { parentId, type }
+  const [creating, setCreating] = useState(null); 
   const [newName, setNewName] = useState('');
   const toast = useToast();
 

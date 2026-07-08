@@ -21,7 +21,7 @@ export default function EditorPanel({
   const commentDecorationsRef = useRef([]);
   const { theme } = useTheme();
 
-  // Use refs so mount-time closures always see current values
+  
   const socketRef = useRef(socket);
   const fileRef = useRef(file);
   const roomIdRef = useRef(roomId);
@@ -36,7 +36,7 @@ export default function EditorPanel({
   useEffect(() => { onChangeRef.current = onChange; }, [onChange]);
   useEffect(() => { onAddCommentClickRef.current = onAddCommentClick; }, [onAddCommentClick]);
 
-  // Reveal focusLine when updated
+  
   useEffect(() => {
     if (focusLine && editorRef.current) {
       editorRef.current.revealLineInCenter(focusLine.lineNumber);
@@ -49,12 +49,12 @@ export default function EditorPanel({
     editorRef.current = editor;
     monacoRef.current = monaco;
 
-    // Ctrl+S to save
+    
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
       onSaveRef.current(editor.getValue());
     });
 
-    // Track cursor changes
+    
     editor.onDidChangeCursorPosition((e) => {
       const s = socketRef.current;
       const rid = roomIdRef.current;
@@ -68,7 +68,7 @@ export default function EditorPanel({
       }
     });
 
-    // Track content changes and broadcast
+    
     editor.onDidChangeModelContent((e) => {
       if (isRemoteChange.current) return;
       const content = editor.getValue();
@@ -93,9 +93,9 @@ export default function EditorPanel({
       }
     });
 
-    // Handle mouse click on line numbers / glyph margin to add comments
+    
     editor.onMouseDown((e) => {
-      // Check if clicked the line numbers (line numbers is element type 3) or glyph margin (type 2)
+      
       const targetType = e.target.type;
       if (targetType === 3 || targetType === 2) {
         const line = e.target.position.lineNumber;
@@ -106,7 +106,7 @@ export default function EditorPanel({
     });
   }
 
-  // Listen for remote code changes
+  
   useEffect(() => {
     if (!socket) return;
 
@@ -135,7 +135,7 @@ export default function EditorPanel({
     return () => socket.off('code-change', handleRemoteChange);
   }, [socket, file?.id]);
 
-  // Render remote cursors
+  
   useEffect(() => {
     if (!editorRef.current || !monacoRef.current) return;
     const editor = editorRef.current;
@@ -158,7 +158,7 @@ export default function EditorPanel({
     decorationsRef.current = editor.deltaDecorations(decorationsRef.current, newDecorations);
   }, [remoteCursors, file?.id]);
 
-  // Render review comments in glyph margin
+  
   useEffect(() => {
     if (!editorRef.current || !monacoRef.current) return;
     const editor = editorRef.current;
@@ -193,7 +193,7 @@ export default function EditorPanel({
           minimap: { enabled: true, scale: 1 },
           wordWrap: 'on',
           lineNumbers: 'on',
-          glyphMargin: true, // Enable glyph margin for review comment indicators
+          glyphMargin: true, 
           tabSize: 2,
           insertSpaces: true,
           automaticLayout: true,

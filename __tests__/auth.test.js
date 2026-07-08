@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 
-// Mock the database pool
+
 vi.mock('../backend/config/database', () => ({
   pool: {
     query: vi.fn(),
@@ -15,7 +15,7 @@ vi.mock('../backend/config/database', () => ({
 
 describe('Auth', () => {
   it('should require email and password for login', async () => {
-    // Test validation
+    
     expect(true).toBe(true);
   });
 

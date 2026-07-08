@@ -12,7 +12,7 @@ async function connectRedis() {
         url: process.env.UPSTASH_REDIS_REST_URL,
         token: process.env.UPSTASH_REDIS_REST_TOKEN,
       });
-      // Test ping
+      
       const res = await redis.ping();
       console.log('[REDIS] Connected to Upstash (Ping response:', res, ')');
       isUpstash = true;
@@ -34,7 +34,7 @@ async function connectRedis() {
     });
 
     redis.on('error', (err) => {
-      // Catch connection errors to prevent unhandled process events
+      
       console.warn('[REDIS] Connection error:', err.message);
     });
 

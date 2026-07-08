@@ -22,7 +22,7 @@ export default function Home() {
 
   return (
     <main className="flex-1">
-      {/* Header */}
+      {}
       <header className="sticky top-0 z-50 border-b border-brand-border" style={{ backgroundColor: 'var(--base)' }}>
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 select-none hover:opacity-90 transition-opacity">
@@ -32,7 +32,7 @@ export default function Home() {
             </span>
           </Link>
           
-          {/* Desktop Navigation */}
+          {}
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
             <Link
@@ -56,7 +56,7 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Mobile Hamburger Button */}
+          {}
           <div className="flex items-center gap-2 md:hidden">
             <ThemeToggle />
             <button
@@ -69,7 +69,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Mobile Navigation Drawer */}
+        {}
         {mobileMenuOpen && (
           <div className="border-t border-brand-border bg-brand-surface1 md:hidden animate-fade font-sans">
             <div className="flex flex-col p-4 gap-3">
@@ -100,7 +100,7 @@ export default function Home() {
         )}
       </header>
 
-      {/* Hero */}
+      {}
       <section className="border-b border-brand-border">
         <div className="max-w-6xl mx-auto px-6 py-24 md:py-32">
           <p className="text-xs font-mono uppercase tracking-widest mb-6" style={{ color: 'var(--accent)' }}>
@@ -133,7 +133,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features */}
+      {}
       <section>
         <div className="max-w-6xl mx-auto px-6 py-20">
           <p className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: 'var(--accent)' }}>
@@ -158,7 +158,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {}
       <section className="border-t border-brand-border">
         <div className="max-w-6xl mx-auto px-6 py-20">
           <p className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: 'var(--accent)' }}>

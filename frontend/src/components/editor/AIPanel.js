@@ -6,7 +6,7 @@ export default function AIPanel({ projectId, activeFile, prefilledPrompt, prefil
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState('ask'); // ask | explain | debug | tests | optimize | refactor | review | document | flowchart
+  const [mode, setMode] = useState('ask'); 
   const messagesEndRef = useRef(null);
 
   const modes = [
@@ -21,12 +21,12 @@ export default function AIPanel({ projectId, activeFile, prefilledPrompt, prefil
     { id: 'flowchart', label: 'Flowchart', desc: 'Generate logic flow diagram' },
   ];
 
-  // Auto-scroll to bottom when messages or loading state changes
+  
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  // Handle prefilled prompts (e.g. from Explain Error button)
+  
   useEffect(() => {
     if (prefilledPrompt && prefilledMode) {
       setMode(prefilledMode);
@@ -64,7 +64,7 @@ export default function AIPanel({ projectId, activeFile, prefilledPrompt, prefil
     }
   }
 
-  // Simple, elegant client-side Markdown rendering
+  
   function renderMarkdown(text) {
     if (!text) return null;
 
@@ -77,7 +77,7 @@ export default function AIPanel({ projectId, activeFile, prefilledPrompt, prefil
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
 
-      // Check code blocks
+      
       if (line.trim().startsWith('```')) {
         if (isInsideCode) {
           if (codeLang === 'mermaid') {
@@ -120,7 +120,7 @@ export default function AIPanel({ projectId, activeFile, prefilledPrompt, prefil
         continue;
       }
 
-      // Check headers
+      
       if (line.startsWith('#')) {
         const match = line.match(/^(#{1,6})\s+(.*)$/);
         if (match) {
@@ -136,7 +136,7 @@ export default function AIPanel({ projectId, activeFile, prefilledPrompt, prefil
         }
       }
 
-      // Check lists
+      
       if (line.trim().startsWith('-') || line.trim().startsWith('*')) {
         const listContent = line.replace(/^\s*[\-\*]\s+/, '');
         elements.push(
@@ -147,7 +147,7 @@ export default function AIPanel({ projectId, activeFile, prefilledPrompt, prefil
         continue;
       }
 
-      // Paragraph
+      
       if (line.trim() === '') {
         elements.push(<div key={`space-${i}`} className="h-1.5" />);
       } else {
@@ -215,12 +215,12 @@ export default function AIPanel({ projectId, activeFile, prefilledPrompt, prefil
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-      {/* Header */}
+      {}
       <div className="h-8 px-3 flex items-center border-b border-brand-border shrink-0" style={{ backgroundColor: 'var(--surface-1)' }}>
         <span className="text-[10px] font-mono uppercase tracking-widest text-brand-text3">AI Assistant</span>
       </div>
 
-      {/* Mode selector */}
+      {}
       <div className="flex flex-wrap gap-1 p-2 border-b border-brand-border shrink-0" style={{ backgroundColor: 'var(--surface-1)' }}>
         {modes.map(m => (
           <button
@@ -239,7 +239,7 @@ export default function AIPanel({ projectId, activeFile, prefilledPrompt, prefil
         ))}
       </div>
 
-      {/* Messages area — absolute positioned container to ensure scrolling works */}
+      {}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         <div
           style={{
@@ -310,7 +310,7 @@ export default function AIPanel({ projectId, activeFile, prefilledPrompt, prefil
         </div>
       </div>
 
-      {/* Input */}
+      {}
       <form onSubmit={handleSubmit} className="border-t border-brand-border p-2 shrink-0" style={{ backgroundColor: 'var(--surface-1)' }}>
         <div className="flex gap-1">
           <input

@@ -32,7 +32,7 @@ export function SocketProvider({ children }) {
 
     newSocket.on('connect_error', (err) => {
       console.error('[Socket] Connection error:', err.message);
-      // If auth error, don't keep retrying
+      
       if (err.message === 'Authentication error') {
         newSocket.disconnect();
       }
