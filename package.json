@@ -1,0 +1,25 @@
+{
+  "name": "codecollab",
+  "version": "1.0.0",
+  "description": "Real-time collaborative AI coding platform",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n frontend,backend -c cyan,yellow \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "install:all": "cd frontend && npm install && cd ../backend && npm install",
+    "docker:up": "docker compose up --build -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "test": "vitest run --config __tests__/vitest.config.js",
+    "test:e2e": "npx playwright test --config e2e/playwright.config.js"
+  },
+  "devDependencies": {
+    "bcryptjs": "^3.0.3",
+    "concurrently": "^9.1.2",
+    "jsonwebtoken": "^9.0.3",
+    "vitest": "^4.1.10"
+  },
+  "author": "Varun",
+  "license": "MIT"
+}
