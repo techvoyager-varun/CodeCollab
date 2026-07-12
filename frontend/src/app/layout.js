@@ -3,6 +3,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ToastProvider } from '@/contexts/ToastContext';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = {
   title: 'CodeCollab — Real-Time Collaborative AI Coding',
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
               <div className="flex flex-col min-h-screen">
                 {children}
                 <SpeedInsights />
+                <Analytics />
                 <footer className="border-t border-brand-border py-4 px-6 text-center text-xs text-brand-text3">
                   © 2026 Varun. All rights reserved. Created by Varun.
                 </footer>
